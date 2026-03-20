@@ -1,0 +1,141 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 500 500">
+  <defs>
+    <!-- Neon green glow filter -->
+    <filter id="neonGlow" x="-50%" y="-50%" width="200%" height="200%">
+      <feGaussianBlur stdDeviation="4" result="blur"/>
+      <feMerge>
+        <feMergeNode in="blur"/>
+        <feMergeNode in="blur"/>
+        <feMergeNode in="SourceGraphic"/>
+      </feMerge>
+    </filter>
+
+    <!-- Circuit pattern -->
+    <pattern id="circuit" x="0" y="0" width="50" height="50" patternUnits="userSpaceOnUse">
+      <path d="M0 25 L20 25 M25 0 L25 20 M30 25 L50 25 M25 30 L25 50" stroke="#00ff88" stroke-width="0.5" opacity="0.1" fill="none"/>
+      <circle cx="25" cy="25" r="2" fill="#00ff88" opacity="0.2"/>
+    </pattern>
+
+    <!-- Stronger glow for outer ring -->
+    <filter id="outerGlow" x="-50%" y="-50%" width="200%" height="200%">
+      <feGaussianBlur stdDeviation="8" result="blur"/>
+      <feMerge>
+        <feMergeNode in="blur"/>
+        <feMergeNode in="blur"/>
+        <feMergeNode in="blur"/>
+        <feMergeNode in="SourceGraphic"/>
+      </feMerge>
+    </filter>
+  </defs>
+
+  <!-- Background -->
+  <rect width="500" height="500" fill="#0a0f0a"/>
+  <rect width="500" height="500" fill="url(#circuit)"/>
+
+  <!-- Outer circuit ring -->
+  <circle cx="250" cy="250" r="200" fill="none" stroke="#00ff88" stroke-width="2" opacity="0.6" filter="url(#outerGlow)"/>
+  <circle cx="250" cy="250" r="195" fill="none" stroke="#00ff88" stroke-width="1" opacity="0.3"/>
+
+  <!-- Circuit details on ring -->
+  <g stroke="#00ff88" stroke-width="2" opacity="0.4">
+    <!-- Top connection -->
+    <line x1="250" y1="50" x2="250" y2="70"/>
+    <circle cx="250" cy="50" r="4" fill="#00ff88"/>
+
+    <!-- Right connection -->
+    <line x1="450" y1="250" x2="430" y2="250"/>
+    <circle cx="450" cy="250" r="4" fill="#00ff88"/>
+
+    <!-- Bottom connection -->
+    <line x1="250" y1="450" x2="250" y2="430"/>
+    <circle cx="250" cy="450" r="4" fill="#00ff88"/>
+
+    <!-- Left connection -->
+    <line x1="50" y1="250" x2="70" y2="250"/>
+    <circle cx="50" cy="250" r="4" fill="#00ff88"/>
+
+    <!-- Diagonal circuit lines -->
+    <line x1="108" y1="108" x2="130" y2="130" opacity="0.5"/>
+    <line x1="392" y1="108" x2="370" y2="130" opacity="0.5"/>
+    <line x1="108" y1="392" x2="130" y2="370" opacity="0.5"/>
+    <line x1="392" y1="392" x2="370" y2="370" opacity="0.5"/>
+  </g>
+
+  <!-- People silhouettes - wireframe style -->
+  <g fill="none" stroke="#00ff88" stroke-width="1.5" opacity="0.9" filter="url(#neonGlow)">
+    <!-- Person 1 - left -->
+    <ellipse cx="170" cy="320" rx="25" ry="40" opacity="0.6"/>
+    <circle cx="170" cy="260" r="18" opacity="0.7"/>
+    <!-- Raised arm -->
+    <path d="M150 290 L130 250" stroke-linecap="round"/>
+    <circle cx="130" cy="245" r="5" fill="#00ff88" stroke="none"/>
+
+    <!-- Person 2 - center left -->
+    <ellipse cx="210" cy="315" rx="22" ry="38" opacity="0.6"/>
+    <circle cx="210" cy="260" r="16" opacity="0.7"/>
+    <path d="M190 285 L175 260" stroke-linecap="round"/>
+
+    <!-- Person 3 - center (main figure) -->
+    <ellipse cx="250" cy="310" rx="28" ry="45" opacity="0.7"/>
+    <circle cx="250" cy="245" r="20" opacity="0.8"/>
+    <!-- Both arms raised high -->
+    <path d="M225 275 L200 210" stroke-width="2" stroke-linecap="round"/>
+    <path d="M275 275 L300 210" stroke-width="2" stroke-linecap="round"/>
+    <circle cx="200" cy="205" r="6" fill="#00ff88" stroke="none"/>
+    <circle cx="300" cy="205" r="6" fill="#00ff88" stroke="none"/>
+
+    <!-- Person 4 - center right -->
+    <ellipse cx="290" cy="315" rx="22" ry="38" opacity="0.6"/>
+    <circle cx="290" cy="260" r="16" opacity="0.7"/>
+    <path d="M310 285 L325 260" stroke-linecap="round"/>
+
+    <!-- Person 5 - right -->
+    <ellipse cx="330" cy="320" rx="25" ry="40" opacity="0.6"/>
+    <circle cx="330" cy="260" r="18" opacity="0.7"/>
+    <!-- Raised arm -->
+    <path d="M350 290 L370 250" stroke-linecap="round"/>
+    <circle cx="370" cy="245" r="5" fill="#00ff88" stroke="none"/>
+  </g>
+
+  <!-- Connection lines between people (network effect) -->
+  <g stroke="#00ff88" stroke-width="1" opacity="0.3">
+    <line x1="170" y1="260" x2="210" y2="260"/>
+    <line x1="210" y1="260" x2="250" y2="245"/>
+    <line x1="250" y1="245" x2="290" y2="260"/>
+    <line x1="290" y1="260" x2="330" y2="260"/>
+  </g>
+
+  <!-- Activity text -->
+  <text x="250" y="400" font-family="Brush Script MT, cursive" font-size="65" font-weight="bold" fill="#00ff88" text-anchor="middle" filter="url(#neonGlow)">Activity</text>
+
+  <!-- CYBER SECURITY DEPARTMENT text -->
+  <text x="250" y="435" font-family="Arial, sans-serif" font-size="16" font-weight="600" fill="#00ff88" text-anchor="middle" letter-spacing="3" opacity="0.9" filter="url(#neonGlow)">CYBER SECURITY DEPARTMENT</text>
+
+  <!-- Decorative circuit elements -->
+  <g stroke="#00ff88" stroke-width="1" opacity="0.3">
+    <!-- Top arc decorations -->
+    <path d="M180 120 Q250 80 320 120" fill="none"/>
+    <circle cx="180" cy="120" r="3" fill="#00ff88"/>
+    <circle cx="320" cy="120" r="3" fill="#00ff88"/>
+
+    <!-- Bottom arc decorations -->
+    <path d="M180 470 Q250 500 320 470" fill="none"/>
+    <circle cx="180" cy="470" r="3" fill="#00ff88"/>
+    <circle cx="320" cy="470" r="3" fill="#00ff88"/>
+  </g>
+
+  <!-- Corner brackets -->
+  <g stroke="#00ff88" stroke-width="2" opacity="0.6">
+    <!-- Top left -->
+    <path d="M100 150 L100 120 L130 120"/>
+    <!-- Top right -->
+    <path d="M400 150 L400 120 L370 120"/>
+    <!-- Bottom left -->
+    <path d="M100 350 L100 380 L130 380"/>
+    <!-- Bottom right -->
+    <path d="M400 350 L400 380 L370 380"/>
+  </g>
+
+  <!-- Digital noise overlay effect -->
+  <rect width="500" height="500" fill="url(#circuit)" opacity="0.05"/>
+</svg>
