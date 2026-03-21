@@ -1,4 +1,4 @@
-import { useState, useEffect, useCallback } from 'react'
+import { useState, useEffect, useCallback, useRef } from 'react'
 import { supabase } from '../lib/supabase'
 
 const STORAGE_KEY = 'activity_form_data'
@@ -48,8 +48,8 @@ const ApplicationForm = () => {
 
     if (!formData.phone.trim()) {
       newErrors.phone = 'الرجاء إدخال رقم الهاتف'
-    } else if (!/^\d{10,}$/.test(formData.phone.replace(/\D/g, ''))) {
-      newErrors.phone = 'الرجاء إدخال رقم هاتف صحيح'
+    } else if (!/^\d{11}$/.test(formData.phone)) {
+      newErrors.phone = 'رقم الهاتف يجب أن يكون 11 رقماً يبدأ بـ 0'
     }
 
     if (!formData.email.trim()) {
@@ -108,11 +108,34 @@ const ApplicationForm = () => {
     return Object.keys(newErrors).length === 0
   }
 
+  // Debounce timer for real-time duplicate check
+  const debounceRef = useRef(null)
+
+  const checkDuplicate = async (name, value) => {
+    if (!value.trim()) return
+    const { data: existing } = await supabase
+      .from('applications')
+      .select('id, email, phone')
+      .eq(name, value.trim())
+      .limit(1)
+
+    if (existing && existing.length > 0) {
+      setErrors(prev => ({
+        ...prev,
+        [name]: name === 'email' 
+          ? 'هذا البريد الإلكتروني مسجل بالفعل' 
+          : 'هذا رقم الهاتف مسجل بالفعل'
+      }))
+    } else {
+      setErrors(prev => ({ ...prev, [name]: '' }))
+    }
+  }
+
   const handleChange = (e) => {
     const { name, value } = e.target
     let formattedValue = value
 
-    // Phone number formatting
+    // Phone number formatting - only digits, auto-add 0, max 11 digits (0 + 10)
     if (name === 'phone') {
       formattedValue = formatPhoneNumber(value)
     }
@@ -122,49 +145,46 @@ const ApplicationForm = () => {
       [name]: formattedValue
     }))
     
-    if (errors[name]) {
+    if (errors[name] && name !== 'email' && name !== 'phone') {
       setErrors(prev => ({ ...prev, [name]: '' }))
     }
+
+    // Real-time duplicate check for email/phone
+    if (name === 'email' || name === 'phone') {
+      if (debounceRef.current) clearTimeout(debounceRef.current)
+      debounceRef.current = setTimeout(() => {
+        checkDuplicate(name, formattedValue)
+      }, 500)
+    }
   }
 
-  const handleBlur = async (e) => {
-    const { name, value } = e.target
+  const handleBlur = (e) => {
+    const { name } = e.target
     setTouched(prev => ({ ...prev, [name]: true }))
-
-    // Check for duplicates on email or phone blur
-    if ((name === 'email' || name === 'phone') && value.trim()) {
-      const field = name === 'email' ? 'email' : 'phone'
-      const { data: existing } = await supabase
-        .from('applications')
-        .select('id, email, phone')
-        .eq(field, value.trim())
-        .limit(1)
-
-      if (existing && existing.length > 0) {
-        setErrors(prev => ({
-          ...prev,
-          [name]: name === 'email' 
-            ? 'هذا البريد الإلكتروني مسجل بالفعل' 
-            : 'هذا رقم الهاتف مسجل بالفعل'
-        }))
-      }
-    }
   }
 
-  // Phone number formatter (Egyptian format)
+  // Phone number formatter - only digits, starts with 0, total 11 chars (0 + 10 digits)
   const formatPhoneNumber = (value) => {
-    const cleaned = value.replace(/\D/g, '')
-    if (cleaned.length === 0) return ''
+    // Remove all non-digits
+    let cleaned = value.replace(/\D/g, '')
     
-    // Add +20 prefix if starts with 0
-    if (cleaned.startsWith('0') && cleaned.length > 1) {
-      return '+20' + cleaned.substring(1)
+    // Limit to max 11 digits
+    cleaned = cleaned.slice(0, 11)
+    
+    // If starts with 2 (from +20), remove it
+    if (cleaned.startsWith('20') && cleaned.length > 1) {
+      cleaned = cleaned.slice(2)
     }
-    // Add + if starts with 2 (part of 20)
-    if (cleaned.startsWith('2') && !value.startsWith('+')) {
-      return '+' + cleaned
+    
+    // If doesn't start with 0, add it
+    if (cleaned.length > 0 && !cleaned.startsWith('0')) {
+      cleaned = '0' + cleaned
     }
-    return value
+    
+    // Re-apply max 11 digits after adding 0
+    cleaned = cleaned.slice(0, 11)
+    
+    return cleaned
   }
 
   // File validation helper
