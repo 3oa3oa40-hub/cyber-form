@@ -325,6 +325,28 @@ function initForm() {
 
         if (!validateForm()) return;
 
+        const email = form.querySelector('[name="email"]')?.value?.trim();
+        const phone = form.querySelector('[name="phone"]')?.value?.trim();
+
+        // Check for duplicate email or phone
+        const { data: existing, error: checkError } = await supabase
+            .from('applications')
+            .select('id, email, phone')
+            .or(`email.eq.${email},phone.eq.${phone}`)
+            .limit(1);
+
+        if (existing && existing.length > 0) {
+            const existingUser = existing[0];
+            if (existingUser.email === email) {
+                showError('email', 'هذا البريد الإلكتروني مسجل بالفعل');
+            }
+            if (existingUser.phone === phone) {
+                showError('phone', 'هذا رقم الهاتف مسجل بالفعل');
+            }
+            submitBtn.classList.remove('loading');
+            return;
+        }
+
         // Show loading
         submitBtn.classList.add('loading');
 

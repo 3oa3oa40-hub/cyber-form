@@ -218,6 +218,27 @@ const ApplicationForm = () => {
     setIsSubmitting(true)
 
     try {
+      // Check for duplicate email or phone
+      const { data: existing } = await supabase
+        .from('applications')
+        .select('id, email, phone')
+        .or(`email.eq.${formData.email},phone.eq.${formData.phone}`)
+        .limit(1)
+
+      if (existing && existing.length > 0) {
+        const existingUser = existing[0]
+        const newErrors = {}
+        if (existingUser.email === formData.email) {
+          newErrors.email = 'هذا البريد الإلكتروني مسجل بالفعل'
+        }
+        if (existingUser.phone === formData.phone) {
+          newErrors.phone = 'هذا رقم الهاتف مسجل بالفعل'
+        }
+        setErrors(newErrors)
+        setIsSubmitting(false)
+        return
+      }
+
       // Prepare data for Supabase
       const submissionData = {
         full_name: formData.fullName,
