@@ -729,9 +729,11 @@ const ApplicationForm = () => {
                         id="graduationYear"
                         name="graduationYear"
                         min="2000"
-                        max="2030"
+                        max="2031"
                         value={formData.graduationYear}
                         onChange={handleChange}
+                        onBlur={handleBlur}
+                        className={touched.graduationYear && errors.graduationYear ? 'error' : touched.graduationYear ? 'valid' : ''}
                       />
                       <div className="input-line"></div>
                       <div className="input-glow"></div>
