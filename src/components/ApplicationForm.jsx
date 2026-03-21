@@ -127,9 +127,28 @@ const ApplicationForm = () => {
     }
   }
 
-  const handleBlur = (e) => {
-    const { name } = e.target
+  const handleBlur = async (e) => {
+    const { name, value } = e.target
     setTouched(prev => ({ ...prev, [name]: true }))
+
+    // Check for duplicates on email or phone blur
+    if ((name === 'email' || name === 'phone') && value.trim()) {
+      const field = name === 'email' ? 'email' : 'phone'
+      const { data: existing } = await supabase
+        .from('applications')
+        .select('id, email, phone')
+        .eq(field, value.trim())
+        .limit(1)
+
+      if (existing && existing.length > 0) {
+        setErrors(prev => ({
+          ...prev,
+          [name]: name === 'email' 
+            ? 'هذا البريد الإلكتروني مسجل بالفعل' 
+            : 'هذا رقم الهاتف مسجل بالفعل'
+        }))
+      }
+    }
   }
 
   // Phone number formatter (Egyptian format)
