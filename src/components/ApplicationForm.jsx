@@ -77,6 +77,11 @@ const ApplicationForm = () => {
     if (formData.status === 'graduate') {
       if (!formData.graduationYear) {
         newErrors.graduationYear = 'الرجاء إدخال سنة التخرج'
+      } else {
+        const year = parseInt(formData.graduationYear)
+        if (isNaN(year) || year < 2000 || year > 2031) {
+          newErrors.graduationYear = 'سنة التخرج يجب أن تكون بين 2000 و 2031'
+        }
       }
     }
 
@@ -163,28 +168,30 @@ const ApplicationForm = () => {
     setTouched(prev => ({ ...prev, [name]: true }))
   }
 
-  // Phone number formatter - only digits, starts with 0, total 11 chars (0 + 10 digits)
+  // Phone number formatter - only digits, starts with 0, total 11 digits
   const formatPhoneNumber = (value) => {
+    if (!value) return ''
+    
     // Remove all non-digits
-    let cleaned = value.replace(/\D/g, '')
+    let digits = value.replace(/\D/g, '')
     
-    // Limit to max 11 digits
-    cleaned = cleaned.slice(0, 11)
-    
-    // If starts with 2 (from +20), remove it
-    if (cleaned.startsWith('20') && cleaned.length > 1) {
-      cleaned = cleaned.slice(2)
+    // Remove any leading + or country code
+    if (digits.startsWith('20')) {
+      digits = digits.slice(2)
+    }
+    if (digits.startsWith('0')) {
+      digits = digits.slice(1)
     }
     
-    // If doesn't start with 0, add it
-    if (cleaned.length > 0 && !cleaned.startsWith('0')) {
-      cleaned = '0' + cleaned
+    // Limit to 10 digits (without the leading 0)
+    digits = digits.slice(0, 10)
+    
+    // Add leading 0 if we have any digits
+    if (digits.length > 0) {
+      digits = '0' + digits
     }
     
-    // Re-apply max 11 digits after adding 0
-    cleaned = cleaned.slice(0, 11)
-    
-    return cleaned
+    return digits
   }
 
   // File validation helper
@@ -439,7 +446,10 @@ const ApplicationForm = () => {
                       value={formData.phone}
                       onChange={handleChange}
                       onBlur={handleBlur}
-                      placeholder="+20xxxxxxxxx"
+                      placeholder="01xxxxxxxxx"
+                      pattern="[0-9]*"
+                      inputMode="numeric"
+                      maxLength={11}
                       className={touched.phone && errors.phone ? 'error' : touched.phone ? 'valid' : ''}
                       required
                     />
