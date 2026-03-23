@@ -201,7 +201,7 @@ const Hero = () => {
           <span className="highlight" style={{ fontSize: '0.9em' }}>
             <span style={{
               animation: 'typing 3s steps(8) infinite'
-            }}>Activity</span>
+            }}>أكتيفيتي</span>
           </span>
           <span className="glitch" data-text="للأمن السيبراني" style={{ fontSize: '0.7em' }}>للأمن السيبراني</span>
         </h1>
