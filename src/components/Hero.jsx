@@ -197,13 +197,13 @@ const Hero = () => {
         </div>
         
         <h1 className="hero-title">
-          <span className="glitch" data-text="انضم إلى فريق" style={{ fontSize: '0.7em' }}>انضم إلى فريق</span>
+          <span className="glitch" data-text="انضم إلى فريق" style={{ fontSize: '0.7em' }}>انضم إلى فريق </span>
           <span className="highlight" style={{ fontSize: '0.9em' }}>
             <span style={{
               animation: 'typing 3s steps(8) infinite'
-            }}>أكتيفيتي</span>
+            }}>اكتيڤيتي</span>
           </span>
-          <span className="glitch" data-text="للأمن السيبراني" style={{ fontSize: '0.7em' }}>للأمن السيبراني</span>
+          <span className="glitch" data-text="للأمن السيبراني" style={{ fontSize: '0.7em' }}> للأمن السيبراني </span>
         </h1>
         
         <p className="hero-subtitle">
